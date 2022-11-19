@@ -1,4 +1,5 @@
 import React from "react";
+import Sizes from "./sizes";
 
 const LightTheme = {
 	theme: 'light',
@@ -8,7 +9,8 @@ const LightTheme = {
 		selected: '#C8E0FC',
 		systemText: '#223D5A',
 		secondaryText: '#303030',
-	}
+	},
+	sizes: {...Sizes},
 }
 
 export default LightTheme;

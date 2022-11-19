@@ -5,18 +5,34 @@ export const content = {
 			en: 'Theme:',
 		},
 		options: {
-			ru: ['Тёмная', 'Авто', 'Светлая'],
-			en: ['Dark', 'Auto', 'Light'],
+			dark: {
+				ru: 'Темная',
+				en: 'Dark',
+			},
+			light: {
+				ru: 'Светлая',
+				en: 'Light',
+			},
+			auto: {
+				ru: 'Авто',
+				en: 'Auto',
+			},
 		},
 	},
 	langSwitcher: {
 		title: {
-			ru: 'Язык',
-			en: 'Language',
+			ru: 'Язык:',
+			en: 'Language:',
 		},
 		options: {
-			ru: ['Русский', 'English'],
-			en: ['Русский', 'English'],
+			rus: {
+				ru: '🇷🇺',
+				en: '🇷🇺',
+			},
+			eng: {
+				ru: '🇬🇧',
+				en: '🇬🇧',
+			}
 		}
 	},
 }

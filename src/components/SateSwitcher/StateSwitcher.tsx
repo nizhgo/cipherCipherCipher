@@ -2,18 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import StateSwitcherProps from "./interfaces";
 const StateSwitcher = (props: StateSwitcherProps) => {
-	const {title, options, onChange, selected} = props;
+	const {title, options, selected} = props;
 	return (
 		<StateSwitcherContainer>
-			<StateSwitcherTitle>{title}</StateSwitcherTitle>
+			{title && <StateSwitcherTitle>{title}</StateSwitcherTitle>}
 			<StateSwitcherOptions>
-				{options.map((option: string, index: number) => {
-					return (
-						<StateSwitcherOption isSelected={selected === option.toLowerCase()} onClick={() => onChange(option.toLowerCase())} key={index}>
-							{option}
-						</StateSwitcherOption>
-					)
-				}
+				{options.map((option, index) => {
+						return (
+							<StateSwitcherOption isSelected={selected === option.value} onClick={option.onClick}
+							                     key={index}>
+								{option.title}
+							</StateSwitcherOption>
+						)
+					}
 				)}
 			</StateSwitcherOptions>
 		</StateSwitcherContainer>
@@ -32,7 +33,7 @@ const StateSwitcherOptionContainer = styled.div<{isSelected: boolean}>`
   	display: flex;
   	justify-content: center;
   	align-items: center;
-  	padding: 3px 10px;
+  	padding: 3px 8px;
   	border-radius: 32px;
   	background-color: ${props => props.isSelected ? props.theme.colors.selected : 'transparent'};
 	color: ${props => props.theme.colors.systemText};

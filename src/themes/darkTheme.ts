@@ -8,6 +8,7 @@ const DarkTheme = {
 		selected: '#4f4f4f',
 		systemText: '#ffffff',
 		secondaryText: '#c0c0c0',
+		border: '#9E9E9E',
 	},
 	sizes: {...Sizes},
 }

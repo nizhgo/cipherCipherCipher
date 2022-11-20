@@ -52,12 +52,13 @@ export default Header
 
 
 const HeaderContainer = styled.div`
-	margin-top: 20px;
+	padding: 16px 0;
 	width: 100%;
   	display: flex;
   	justify-content: space-between;
   	align-items: center;
   	flex-shrink: 0;
+  	border-bottom: 1px solid ${props => props.theme.colors.border};
 	`
 
 const MenuToggleContainer = styled.div`
@@ -93,7 +94,7 @@ const DropdownMenu = styled.div<{isVisible: boolean}>`
   	top: 0;
   	left: 0;
   	right: 0;
-  	padding: 20px 5px;
+  	padding: 20px 10px;
     background: ${props => props.theme.colors.background};
   	display: flex;
   	flex-direction: column;

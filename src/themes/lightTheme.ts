@@ -9,6 +9,7 @@ const LightTheme = {
 		selected: '#C8E0FC',
 		systemText: '#223D5A',
 		secondaryText: '#303030',
+		border: '#C8E0FC',
 	},
 	sizes: {...Sizes},
 }

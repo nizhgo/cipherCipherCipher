@@ -26,9 +26,9 @@ const MenuToggleWrapper = styled.div`
 `
 const Dot = styled.span`
   flex: 0 0 auto;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   gap: 7px;
-  background-color: currentColor;
+  background-color: ${props => props.theme.colors.systemText};
   border-radius: 50%;
 `

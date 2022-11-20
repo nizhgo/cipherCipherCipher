@@ -3,6 +3,8 @@ import {
     useState
 } from "react";
 import styled, {ThemeProvider} from "styled-components";
+import NoekeonCipher from "./components/NoekeonCipher/NoekeonCipher";
+import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import {
     AppContext,
@@ -10,7 +12,7 @@ import {
 } from "./providers/AppContext";
 import LightTheme from "./themes/lightTheme";
 import DarkTheme from "./themes/darkTheme";
-import {AppContainer, AppWrapper}from "./style";
+import {AppContainer, AppWrapper, AppContent}from "./style";
 
 function App() {
     const {theme} = useContext(AppContext);
@@ -19,7 +21,10 @@ function App() {
                 <AppWrapper>
                     <AppContainer>
                         <Header/>
-                        <p>Test</p>
+                        <AppContent>
+                            <NoekeonCipher/>
+                        </AppContent>
+                        <Footer/>
                     </AppContainer>
                 </AppWrapper>
             </ThemeProvider>

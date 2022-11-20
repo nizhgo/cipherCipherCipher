@@ -14,11 +14,18 @@ const AppWrapper = styled.div`
 
 const AppContainer = styled.div`
 	max-width: 1200px;
+  	min-height: 100vh;
 	width: 100%;
 	margin: 0 auto;
-	padding: 0 5px;
+	padding: 0 10px;
   	display: flex;
   	flex-direction: column;
 `;
 
-export { AppWrapper, AppContainer };
+const AppContent = styled.div`
+	flex: 1;
+	height: 100%;
+	width: 100%;
+`;
+
+export { AppWrapper, AppContainer, AppContent };

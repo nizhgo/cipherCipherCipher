@@ -3,16 +3,23 @@ import styled from "styled-components";
 import CloseIcon from '../../assets/images/close.svg';
 import CopyIcon from '../../assets/images/copy.svg';
 import useCopyToClipboard from '../../hooks/useCopyToClipboard';
-interface TranslatorProps {
+import Button from "../UI/Button/Button";
+import InfoIconBox from "../UI/InfoIconBox";
+import {EncryptUTF8, DecryptBase64} from "../NoekeonCipher/scripts/NoekeonEncDec";
+import CryptoJS from "crypto-js";
 
+interface TranslatorProps {
+	NoekeonKey: string;
 }
-const Translator = () => {
+const Translator = (props: TranslatorProps) => {
+	const {NoekeonKey} = props;
 	const [text, setText] = React.useState<string>('');
 	const [translatedText, setTranslatedText] = React.useState<string>('');
 	const [textAreaHeight, setTextAreaHeight] = React.useState<number>(0);
 	const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
 	const [isTyping, setIsTyping] = React.useState<boolean>(false);
 	const { copied, copyToClipboard } = useCopyToClipboard();
+	const [isEncrypt, setIsEncrypt] = React.useState<boolean>(true);
 
 	const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setText(e.target.value)
@@ -25,8 +32,10 @@ const Translator = () => {
 		}}, []);
 
 	    const translate = () => {
-		setTranslatedText(text);
+			//isEncrypt ? setTranslatedText(EncryptUTF8(text, NoekeonKey)) : setTranslatedText(DecryptBase64(text, NoekeonKey));
+		    isEncrypt ? setTranslatedText(CryptoJS.AES.encrypt(text, NoekeonKey).toString()) : setTranslatedText(CryptoJS.AES.decrypt(text, NoekeonKey).toString(CryptoJS.enc.Utf8));
 	}
+
 
 		const handleCopy = () => {
 			copyToClipboard(translatedText);
@@ -61,11 +70,16 @@ const Translator = () => {
 		return (
 			<TranslatorWrapper>
 				<LefthandSide>
+					<section>
+						<button onClick={() => setIsEncrypt(true)}>Encrypt</button>
+						<button onClick={() => setIsEncrypt(false)}>Decrypt</button>
+						<p>{isEncrypt ? 'Enc' : 'Dec'}</p>
+					</section>
 					<BoxContent>
 						<TranslatorInput placeholder='Enter text to translate' value={text} onChange={handleTextChange}
 						                 ref={textAreaRef} style={{height: textAreaHeight}}/>
 						<Info>
-							<section onClick={handleClear}><InfoIcon src={CloseIcon}/></section>
+							<section onClick={handleClear}><InfoIconBox src={CloseIcon}/></section>
 							<p>{text.length}</p>
 						</Info>
 					</BoxContent>
@@ -75,8 +89,8 @@ const Translator = () => {
 						<TranslatorInput placeholder='Translated text will appear here' value={translatedText}
 						                 onChange={(e) => handleTextChange(e)} style={{height: textAreaHeight}}/>
 						<Info>
-							<section onClick={handleClear}><InfoIcon src={CloseIcon}/></section>
-							<section onClick={handleCopy}><InfoIcon src={CopyIcon}/></section>
+							<section onClick={handleClear}><InfoIconBox src={CloseIcon}/></section>
+							<section onClick={handleCopy}><InfoIconBox src={CopyIcon}/></section>
 						</Info></BoxContent>
 				</RighthandSide>
 			</TranslatorWrapper>
@@ -96,11 +110,6 @@ const TranslatorWrapper = styled.div`
     }
 	`
 
-const InfoIcon = styled.img`
-  	width: 22px;
-  	height: 22px;
-  	cursor: pointer;
-  `
 
 const BoxContent = styled.div`
   display: grid;
@@ -124,7 +133,7 @@ const TranslatorInput = styled.textarea`
 	    		outline: none;
     }
 
-  
+
   	`
 
 const Box = styled.div`

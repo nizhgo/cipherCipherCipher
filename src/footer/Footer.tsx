@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import LangSwitcher from "../components/LangSwitcher/LangSwitcher";
 
 const Footer = () => {
 	return (
 		<FooterWrapper>
+			<LangSwitcher/>
 			<p>Aleksey Nizhgorodov 😎</p>
 			<p>{Date.now()}</p>
 		</FooterWrapper>

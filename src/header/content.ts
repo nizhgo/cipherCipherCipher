@@ -19,20 +19,4 @@ export const content = {
 			},
 		},
 	},
-	langSwitcher: {
-		title: {
-			ru: 'Язык:',
-			en: 'Language:',
-		},
-		options: {
-			rus: {
-				ru: '🇷🇺',
-				en: '🇷🇺',
-			},
-			eng: {
-				ru: '🇬🇧',
-				en: '🇬🇧',
-			}
-		}
-	},
 }

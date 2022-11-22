@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import {preview} from "vite";
 import AppLogo from "../assets/images/logo.svg"
+import LangSwitcher from "../components/LangSwitcher/LangSwitcher";
 import MenuToggle from "../components/MenuToggle/MenuToggle";
 import StateSwitcher from "../components/SateSwitcher/StateSwitcher";
 import {AppContext} from "../providers/AppContext";
@@ -21,14 +22,6 @@ const Header = () => {
 				onClick: () => setTheme('dark'), value:'dark'}],
 		selected: theme
 	}
-	const langSwitcher: StateSwitcherProps = {
-		title: content.langSwitcher.title[lang],
-		options: [{title: content.langSwitcher.options.rus[lang],
-			onClick: () => setLang('ru'), value:'ru'},
-			{title: content.langSwitcher.options.eng[lang],
-				onClick: () => setLang('en'), value:'en'}],
-		selected: lang
-	}
   return (
 	  	<HeaderContainer>
 		    <LogoImg src={AppLogo} alt="logo"/>
@@ -41,7 +34,7 @@ const Header = () => {
 		    <DropdownMenu isVisible={isMenuOpen}>
 			    <LogoImg src={AppLogo} alt="logo"/>
 			    <StateSwitcher {...themeSwitcher}/>
-			    <StateSwitcher {...langSwitcher}/>
+			    <LangSwitcher/>
 		    </DropdownMenu>
 	    </HeaderContainer>
   )
@@ -77,7 +70,7 @@ const MenuToggleContainer = styled.div`
 const LogoImg = styled.img`
   	width: 196px;
   	height: 30px;
-  	filter: ${props => props.theme.theme === "light" ? "invert(0)" : "invert(1)"};
+  	filter: ${props => props.theme.title === "light" ? "invert(0)" : "invert(1)"};
   	transition: all 0.4s linear;
 	`
 

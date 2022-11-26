@@ -1,29 +1,29 @@
-import React, {useEffect} from "react";
+import React, {
+	useContext,
+	useEffect
+} from "react";
 import styled from "styled-components";
 import {AppContext} from "../../../../providers/AppContext";
 import {content} from "./content";
 import CopyIcon from '../../../../assets/images/copy.svg';
 import {GenerateKey} from "../../scripts/NoekeonEncDec";
+import {NoekeonContext} from "../../NoekeonProvider";
 
 import {
 	Button,
 } from "../../../UI/Button/Button";
 import InfoIconBox from "../../../UI/InfoIconBox";
-interface KeySectionProps {
-	setAKey: React.Dispatch<React.SetStateAction<string>>;
-}
-const KeySection = (props: KeySectionProps) => {
-	const {setAKey} = props;
+
+const KeySection = () => {
+	const {setKey, key} = useContext(NoekeonContext);
 	const {language, setLanguage} = React.useContext(AppContext);
 	const lang: 'ru' | 'en' = language || 'en';
-	const [key, setKey] = React.useState<string>(new TextDecoder().decode(GenerateKey()));
 
 	const keyGen = () => {
 		let newKey = GenerateKey();
 		//key to base-16
 		const key16 = new Uint8Array(newKey).reduce((data, byte) => data + byte.toString(16).padStart(2, '0'), '');
 		setKey(key16);
-		setAKey(key16);
 	}
 
 	useEffect(() => {
@@ -39,12 +39,7 @@ const KeySection = (props: KeySectionProps) => {
 	}
 
 	const handleKeyGenerate = () => {
-		const newKey = GenerateKey();
-		const key = [];
-		for (let i = 0; i < newKey.length; i++) {
-			key.push(//key to UTF8
-			String.fromCharCode(newKey[i]));
-		}
+		keyGen();
 	}
 	return (
 		<KeySectionWrapper>

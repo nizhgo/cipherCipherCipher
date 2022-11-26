@@ -32,8 +32,4 @@ interface ButtonProps {
 	  }
 	  `;
 
-const TertiaryButton = styled(ButtonBase)`
-`;
 
-
-export default {Button};

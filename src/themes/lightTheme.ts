@@ -11,6 +11,7 @@ const LightTheme = {
 		secondaryText: '#303030',
 		border: '#C8E0FC',
 		text: '#171717',
+		translatorHeader: '#EBEFFD',
 	},
 	sizes: {...Sizes},
 }

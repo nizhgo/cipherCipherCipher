@@ -1,60 +1,69 @@
-import React, {useEffect} from "react";
+import React, {
+	useContext,
+	useEffect
+} from "react";
 import styled from "styled-components";
 import CloseIcon from '../../assets/images/close.svg';
 import CopyIcon from '../../assets/images/copy.svg';
 import useCopyToClipboard from '../../hooks/useCopyToClipboard';
-import Button from "../UI/Button/Button";
+import {Button} from "../UI/Button/Button";
 import InfoIconBox from "../UI/InfoIconBox";
 import {EncryptUTF8, DecryptBase64} from "../NoekeonCipher/scripts/NoekeonEncDec";
 import CryptoJS from "crypto-js";
+import {NoekeonContext} from "../NoekeonCipher/NoekeonProvider";
 
-interface TranslatorProps {
-	NoekeonKey: string;
-}
-const Translator = (props: TranslatorProps) => {
-	const {NoekeonKey} = props;
-	const [text, setText] = React.useState<string>('');
-	const [translatedText, setTranslatedText] = React.useState<string>('');
-	const [textAreaHeight, setTextAreaHeight] = React.useState<number>(0);
-	const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
-	const [isTyping, setIsTyping] = React.useState<boolean>(false);
-	const { copied, copyToClipboard } = useCopyToClipboard();
-	const [isEncrypt, setIsEncrypt] = React.useState<boolean>(true);
 
+const Translator = () => {
+	const {key, mode, leftText, setLeftText, rightText, setRightText} = useContext(NoekeonContext);
+	const leftPanelRef = React.useRef<HTMLTextAreaElement>(null);
+	const rightPanelRef = React.useRef<HTMLTextAreaElement>(null);
+	const { copied, copyToClipboard } = useCopyToClipboard();;
+	const isEncrypt = mode === 'encrypt';
 	const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setText(e.target.value)
+		setLeftText(e.target.value)
 	}
+
+
 	useEffect(function () {
-		if (textAreaRef.current) {
-			textAreaRef.current.focus();
-			//disable spellcheck
-			textAreaRef.current.spellcheck = false;
+		if (leftPanelRef.current && rightPanelRef.current) {
+			leftPanelRef.current.focus();
+			rightPanelRef.current.spellcheck = false;
+			leftPanelRef.current.spellcheck = false;
 		}}, []);
 
 	    const translate = () => {
 			//isEncrypt ? setTranslatedText(EncryptUTF8(text, NoekeonKey)) : setTranslatedText(DecryptBase64(text, NoekeonKey));
-		    isEncrypt ? setTranslatedText(CryptoJS.AES.encrypt(text, NoekeonKey).toString()) : setTranslatedText(CryptoJS.AES.decrypt(text, NoekeonKey).toString(CryptoJS.enc.Utf8));
+		    isEncrypt ? setRightText(CryptoJS.AES.encrypt(leftText, key).toString()) : setRightText(CryptoJS.AES.decrypt(leftText, key).toString(CryptoJS.enc.Utf8));
 	}
 
 
 		const handleCopy = () => {
-			copyToClipboard(translatedText);
+			copyToClipboard(rightText);
 		}
 		const handleClear = () => {
-			setText('');
-			setTranslatedText('');
+			setLeftText('');
+			setRightText('');
 		}
-		const handleTranslate = (text: string) => {
-			setTranslatedText(text);
-		}
-
 		//auto resize textarea height on text change
 		useEffect(() => {
-			if (textAreaRef.current) {
-				textAreaRef.current.style.height = "auto";
-				setTextAreaHeight(textAreaRef.current.scrollHeight);
+			if (leftPanelRef.current && rightPanelRef.current) {
+				leftPanelRef.current.style.height = "auto";
+				rightPanelRef.current.style.height = "auto";
+				let height; //set heighest textarea height to other textarea (min height 128px)
+				if (leftPanelRef.current.scrollHeight > rightPanelRef.current.scrollHeight) {
+					height = leftPanelRef.current.scrollHeight;
+				}
+				else {
+					height = rightPanelRef.current.scrollHeight;
+				}
+				if (height < 128) {
+					height = 128;
+				}
+				leftPanelRef.current.style.height = height + "px";
+				rightPanelRef.current.style.height = height + "px";
+				// setTextAreaHeight(height);
 			}
-		}, [text]);
+		}, [leftText, rightText]);
 
 		//auto translate on stop typing for 0.6 second
 
@@ -64,30 +73,25 @@ const Translator = (props: TranslatorProps) => {
 				clearTimeout(handler);
 			};
 		}
-		, [text]);
+		, [leftText, key]);
 
 
 		return (
 			<TranslatorWrapper>
 				<LefthandSide>
-					<section>
-						<button onClick={() => setIsEncrypt(true)}>Encrypt</button>
-						<button onClick={() => setIsEncrypt(false)}>Decrypt</button>
-						<p>{isEncrypt ? 'Enc' : 'Dec'}</p>
-					</section>
 					<BoxContent>
-						<TranslatorInput placeholder='Enter text to translate' value={text} onChange={handleTextChange}
-						                 ref={textAreaRef} style={{height: textAreaHeight}}/>
+						<TranslatorInput placeholder='Enter text to translate' value={leftText} onChange={handleTextChange}
+						                 ref={leftPanelRef}/>
 						<Info>
 							<section onClick={handleClear}><InfoIconBox src={CloseIcon}/></section>
-							<p>{text.length}</p>
+							<p>{leftText.length}</p>
 						</Info>
 					</BoxContent>
 				</LefthandSide>
 				<RighthandSide>
 					<BoxContent>
-						<TranslatorInput placeholder='Translated text will appear here' value={translatedText}
-						                 onChange={(e) => handleTextChange(e)} style={{height: textAreaHeight}}/>
+						<TranslatorInput placeholder='Translated text will appear here' ref={rightPanelRef} value={rightText}
+						                 onChange={(e) => handleTextChange(e)}/>
 						<Info>
 							<section onClick={handleClear}><InfoIconBox src={CloseIcon}/></section>
 							<section onClick={handleCopy}><InfoIconBox src={CopyIcon}/></section>
@@ -143,6 +147,7 @@ const Box = styled.div`
    padding: 31px 10px;
    width: 100%;
   	transition: all 0.4s linear;
+  // border: 0.5px solid ${props => props.theme.colors.border};
    `
 
 const Info = styled.div`
@@ -162,5 +167,8 @@ const LefthandSide = styled(Box)`
 const RighthandSide = styled(Box)`
 	  	background-color: ${props => props.theme.colors.primary};
 	`
+
+
+
 
 

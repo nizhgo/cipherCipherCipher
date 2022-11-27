@@ -1,11 +1,18 @@
 import React from "react";
-import styled from "styled-components";
-import {Button} from "../../../UI/Button/Button";
-import {NoekeonContext} from "../../NoekeonProvider";
 import Swap from "../../../../assets/images/swap.svg";
-import InfoIconBox from "../../../UI/InfoIconBox";
+import {AppContext} from "../../../../providers/AppContext";
+import InfoIconBox from "../../../UI/InfoIconBox/InfoIconBox";
+import {NoekeonContext} from "../../NoekeonProvider";
+import content from "./content";
+import {
+	ModeSwitcherContainer,
+	ModeTitle,
+	SwitchButton
+} from "./style";
 
 const ModeSwitcher = () => {
+	const {language} = React.useContext(AppContext);
+	const lang = language || 'en';
 	const {mode, setMode, leftText, setLeftText, rightText, setRightText} = React.useContext(NoekeonContext);
 	const ButtonRef = React.useRef<HTMLButtonElement>(null);
 	//then click on button rotate it 180deg on 0.2s
@@ -29,47 +36,14 @@ const ModeSwitcher = () => {
 	}
 	return(
 		<ModeSwitcherContainer>
-				<ModeTitle>{mode === 'encrypt' ? 'Encrypt' : 'Decrypt'}</ModeTitle>
+			<ModeTitle>{mode === 'encrypt' ? content.plaintext[language] : content.ciphertext[language]}</ModeTitle>
 			<section>
-			<SwitchButton onClick={handleSwitch} ref={ButtonRef}><InfoIconBox src={Swap} alt="swap"/></SwitchButton>
+				<SwitchButton onClick={handleSwitch} ref={ButtonRef}><InfoIconBox src={Swap} alt='swap'/></SwitchButton>
 			</section>
-				<ModeTitle>{mode === 'encrypt' ? 'Decrypt' : 'Encrypt'}</ModeTitle>
+			<ModeTitle>{mode === 'encrypt' ? content.ciphertext[language] : content.plaintext[language]}</ModeTitle>
 		</ModeSwitcherContainer>
 	)
 }
 
-const ModeTitle = styled.h5`
-  	font-size: ${({theme}) => theme.sizes.mainTextSize};
-  	font-weight: 600;
-  	color: ${({theme}) => theme.colors.systemText};
-  	transform: translateX(0);
-  	transition: all 0.4s linear;
-  `
-const ModeSwitcherContainer = styled.div`
-	border-radius: 16px 16px 0 0;
-	width: 100%;
-	height: 64px;
-  	display: grid;
-  	grid-template-columns: 1fr auto 1fr;
-  	align-items: center;
-  	transition: all 0.4s linear;
-  	background: ${props => props.theme.colors.background};
-  //center content in grid
-  & > h5{
-      	text-align: center;
-  }
-  
-
-	`
-
-const SwitchButton = styled(Button)`
-  margin-inline: auto;
-	padding: 6px;
-  //speed up animation
-  transition: all 0.3s linear;
-  //must be on center ModeSwitcherContainer
-  margin-left: auto;
-
-`
 
 export default ModeSwitcher

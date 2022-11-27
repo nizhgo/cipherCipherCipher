@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+firebase.json
+.firebase/hosting.ZGlzdA.cache
+.firebase/hosting.cHVibGlj.cache

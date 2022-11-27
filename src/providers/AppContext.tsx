@@ -1,19 +1,34 @@
 import React, {createContext} from "react";
 import {useLocalStorage} from "../hooks/useLocalStorage"
 
-export const AppContext = createContext<any | null>(null);
+interface IAppContext {
+	language: 'ru' | 'en';
+	setLanguage: (lang: 'ru' | 'en') => void;
+	theme: 'light' | 'auto' | 'dark';
+	setTheme: (theme: 'light' | 'auto' | 'dark') => void;
+}
+
+export const AppContext = createContext<IAppContext>({
+	language: 'en',
+	setLanguage: () => {
+	},
+	theme: 'auto',
+	setTheme: () => {
+	},
+})
+
 
 export const AppProvider = ({children}: any) => {
 	const getLanguage = () => {
 		//get user lang from browser
-		const [lang, setLang] = useLocalStorage('language', 'en');
+		const [lang, setLang] = useLocalStorage('language', 'ru');
 		//if localstorage is empty set lang from browser and save it to localstorage
-		if (lang === null || lang !== 'ru' || lang !== 'en') {
+		if (lang === null || lang !== 'ru' && lang !== 'en') {
 			const BrowserLang = navigator.language;
-			 //cut first two letters from browser lang
+			//cut first two letters from browser lang
 			const lang = BrowserLang.slice(0, 2);
 			console.log('BrowserLang', lang);
-			return(lang === 'ru' ? 'ru' : 'en');
+			return (lang === 'ru' ? 'ru' : 'en');
 		}
 		return lang;
 	}
@@ -30,7 +45,7 @@ export const AppProvider = ({children}: any) => {
 	}
 
 	const [language, setLanguage] = React.useState<'ru' | 'en'>(getLanguage());
-	const [theme, setTheme] = React.useState(getTheme);
+	const [theme, setTheme] = React.useState<'light' | 'auto' | 'dark'>(getTheme());
 
 	//set theme to localstorage if theme changed
 	React.useEffect(() => {

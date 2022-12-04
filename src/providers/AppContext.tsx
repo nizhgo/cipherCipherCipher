@@ -1,14 +1,11 @@
 import React, {createContext} from "react";
-import {useLocalStorage} from "../hooks/useLocalStorage"
+import getUserDefaultTheme from "../scripts/getUserDefaultTheme";
+import getUserLang from "../scripts/getUserLang";
+import IAppService from "../service/interfaces/IAppService";
+import Language from "../service/types/Language";
+import Theme from "../service/types/Theme";
 
-interface IAppContext {
-	language: 'ru' | 'en';
-	setLanguage: (lang: 'ru' | 'en') => void;
-	theme: 'light' | 'auto' | 'dark';
-	setTheme: (theme: 'light' | 'auto' | 'dark') => void;
-}
-
-export const AppContext = createContext<IAppContext>({
+export const AppContext = createContext<IAppService>({
 	language: 'en',
 	setLanguage: () => {
 	},
@@ -19,33 +16,9 @@ export const AppContext = createContext<IAppContext>({
 
 
 export const AppProvider = ({children}: any) => {
-	const getLanguage = () => {
-		//get user lang from browser
-		const [lang, setLang] = useLocalStorage('language', 'ru');
-		//if localstorage is empty set lang from browser and save it to localstorage
-		if (lang === null || lang !== 'ru' && lang !== 'en') {
-			const BrowserLang = navigator.language;
-			//cut first two letters from browser lang
-			const lang = BrowserLang.slice(0, 2);
-			console.log('BrowserLang', lang);
-			return (lang === 'ru' ? 'ru' : 'en');
-		}
-		return lang;
-	}
 
-	const getTheme = () => {
-		const theme = localStorage.getItem('theme');
-		if (theme === null || theme === 'auto' || (theme !== 'light' && theme !== 'dark')) {
-			//get preferred theme from browser
-			const BrowserTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-			localStorage.setItem('theme', BrowserTheme);
-			return BrowserTheme;
-		}
-		return theme;
-	}
-
-	const [language, setLanguage] = React.useState<'ru' | 'en'>(getLanguage());
-	const [theme, setTheme] = React.useState<'light' | 'auto' | 'dark'>(getTheme());
+	const [language, setLanguage] = React.useState<Language>(getUserLang());
+	const [theme, setTheme] = React.useState<Theme>(getUserDefaultTheme());
 
 	//set theme to localstorage if theme changed
 	React.useEffect(() => {

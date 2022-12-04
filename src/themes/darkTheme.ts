@@ -1,5 +1,5 @@
-import React from "react";
 import Sizes from "./sizes";
+
 const DarkTheme = {
 	title: 'dark',
 	colors: {
